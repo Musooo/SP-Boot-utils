@@ -21,6 +21,18 @@ This project is licensed under the GNU General Public License v3.0. See the [LIC
 - Make utility (optional)
 
 ### Installation
-
+To compile the project, run the following command:
+```bash
+cc -Wall -Wextra -std=c99 -O2 -o <name_of_executable> main.c
+```
+Or:
+```bash
+gcc main.c -o <name_of_executable>
+```
 ## Usage
+
+for help:
+```bash
+./<name_of_executable> -h
+```
 
