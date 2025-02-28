@@ -1,11 +1,18 @@
 #include <stdio.h>
 #include <string.h>
 
-#define BASE_PATH "src/main/java/"
 #define MAX 100
-#define CREATEFILEPATH(buffer, groupId, artifactId, fileName, mod, mod2) (snprintf(buffer, MAX, "%s%s/%s/%s/%s%s.java", BASE_PATH, groupId, artifactId, mod,fileName, mod2))
 #define CONF_FILE "prova.saka"
 
+#if defined(_WIN32) || defined(__CYGWIN__)
+   #define BASE_PATH "src\\main\\java\\"
+   #define CREATEFILEPATH(buffer, groupId, artifactId, fileName, mod, mod2) (snprintf(buffer, MAX, "%s%s\\%s\\%s\\%s%s.java", BASE_PATH, groupId, artifactId, mod,fileName, mod2))
+#elif defined(unix) || defined(__unix__) || defined(__unix)
+   #define BASE_PATH "src/main/java/"
+   #define CREATEFILEPATH(buffer, groupId, artifactId, fileName, mod, mod2) (snprintf(buffer, MAX, "%s%s/%s/%s/%s%s.java", BASE_PATH, groupId, artifactId, mod,fileName, mod2))
+#else
+    #error Unknown environment!
+#endif
 
 int create_file(char *file_name, char *txt){
    FILE *file;
@@ -110,7 +117,9 @@ int create_files(char groupId[MAX], char artifactId[MAX], char *fileName){
 int main(int argc, char **argv){
    // -s groupId artifactId
    // nomeclasse
-   if (strcmp(argv[1], "-s") == 0){
+   if (argc == 1){
+      printf("find help\n");
+   }else if (strcmp(argv[1], "-s") == 0){
       if (argc<4){
          printf("not enough argv, you have to put groupId artifactId");
          return -1;
@@ -118,6 +127,15 @@ int main(int argc, char **argv){
       char path[MAX];
       snprintf(path, MAX, "%s\n%s\n", argv[2], argv[3]);
       create_file(CONF_FILE, path);
+   }else if(strcmp(argv[1], "-h") == 0){
+      printf("help:\n");
+      printf("settup the conf. file\n");
+      printf("-s to set up the %s, follow that with <groupId> <artifactId>\n", CONF_FILE);
+      printf("example: molten -s org.example prova\n");
+      printf("please do not create goofy groupId/artifact do not use special char except in the groupId where you should put a \".\"\n");
+      printf("How to create the files\n");
+      printf("example: molten <ObkName>\n");
+      printf("Remember to put the first letter capital, for now the program doesn't fix it\n");
    }else {
       if (argc<2){
          printf("no");
