@@ -32,7 +32,18 @@ int create_service(char *file_name, char groupId[MAX], char artifactId[MAX], cha
    FILE *file;
 
    file = fopen(file_name, "w");
-   fprintf(file,"package %s.%s.service;\n\nimport org.springframework.beans.factory.annotation.Autowired;\nimport org.springframework.stereotype.Service;\nimport %s.%s.model.%s;\nimport %s.%s.repository.%sRepository;\n\nimport java.util.List;\n\n@Service\npublic class %sService {\n   @Autowired\n   private %sRepository %sRepository;\n\n   public List<%s> findAll() {\n      return %sRepository.findAll();\n   }\n\n   public %s findById(String id) {\n      return %sRepository.findById(id).orElse(null);\n   }\n\n}", groupId, artifactId, groupId, artifactId, name, groupId, artifactId, name, name, name, lname, name, lname, name, lname);
+   fprintf(file,"package %s.%s.service;\n\nimport org.springframework.beans.factory.annotation.Autowired;\nimport org.springframework.stereotype.Service;\nimport %s.%s.model.%s;\nimport %s.%s.repository.%sRepository;\n\nimport java.util.List;\n\n@Service\npublic class %sService {\n   @Autowired\n   private %sRepository %sRepository;\n\n   public List<%s> findAll() {\n      return %sRepository.findAll();\n   }\n\n   public %s findById(Tipo id) {\n      return %sRepository.findById(id).orElse(null);\n   }\n\n}", groupId, artifactId, groupId, artifactId, name, groupId, artifactId, name, name, name, lname, name, lname, name, lname);
+
+   fclose(file);
+
+   return 0;
+}
+
+int create_repository(char *file_name, char groupId[MAX], char artifactId[MAX], char *name){
+   FILE *file;
+
+   file = fopen(file_name, "w");
+   fprintf(file, "package %s.%s.repository;\n\nimport org.springframework.data.jpa.repository.JpaRepository;\nimport org.springframework.stereotype.Repository;\nimport %s.%s.model.%s;\n@Repository\npublic interface %sRepository extends JpaRepository<%s, TipoId> {}", groupId, artifactId, groupId, artifactId, name, name, name);
 
    fclose(file);
 
@@ -82,7 +93,7 @@ int create_files(char groupId[MAX], char artifactId[MAX], char *fileName){
 
    create_model(model, groupId, artifactId, fileName);
    create_service(service, groupId, artifactId, fileName, lname);
-   create_file(repo, "");
+   create_repository(repo, groupId, artifactId, fileName);
    
    return 0;
 }
