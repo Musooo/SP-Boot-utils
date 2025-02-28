@@ -32,7 +32,7 @@ int create_service(char *file_name, char groupId[MAX], char artifactId[MAX], cha
    FILE *file;
 
    file = fopen(file_name, "w");
-   fprintf(file,"package %s.%s.service;\n\nimport org.springframework.beans.factory.annotation.Autowired;\nimport org.springframework.stereotype.Service;\nimport %s.%s.model.%s;\nimport %s.%s.repository.%sRepository;\n\nimport java.util.List;\n\n@Service\npublic class %sService {\n@Autowired\nprivate %sRepository %sRepository;\n\npublic List<%s> findAll() {\nreturn %sRepository.findAll();\n}\n\npublic %s findById(String id) {\nreturn %sRepository.findById(id).orElse(null);\n}\n\n}", groupId, artifactId, groupId, artifactId, name, groupId, artifactId, name, name, name, lname, name, lname, name, lname);
+   fprintf(file,"package %s.%s.service;\n\nimport org.springframework.beans.factory.annotation.Autowired;\nimport org.springframework.stereotype.Service;\nimport %s.%s.model.%s;\nimport %s.%s.repository.%sRepository;\n\nimport java.util.List;\n\n@Service\npublic class %sService {\n   @Autowired\n   private %sRepository %sRepository;\n\n   public List<%s> findAll() {\n      return %sRepository.findAll();\n   }\n\n   public %s findById(String id) {\n      return %sRepository.findById(id).orElse(null);\n   }\n\n}", groupId, artifactId, groupId, artifactId, name, groupId, artifactId, name, name, name, lname, name, lname, name, lname);
 
    fclose(file);
 
