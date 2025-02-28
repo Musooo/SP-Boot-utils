@@ -86,10 +86,19 @@ int create_files(char groupId[MAX], char artifactId[MAX], char *fileName){
    if (lname[0] >= 'A' && lname[0] <= 'Z') {
       lname[0] += ('a' - 'A');
    }
+   char groupIdS[MAX];
+   strcpy(groupIdS, groupId);
+   for(int i = 0; i<MAX; i++){
+      if (groupIdS[i]=='.'){
+         groupIdS[i]='/';
+         break;
+      }
+   }
+
    
-   CREATEFILEPATH(model, groupId, artifactId, fileName, "model", "");
-   CREATEFILEPATH(repo, groupId, artifactId, fileName, "repository", "Repository");
-   CREATEFILEPATH(service, groupId, artifactId, fileName, "service", "Service");
+   CREATEFILEPATH(model, groupIdS, artifactId, fileName, "model", "");
+   CREATEFILEPATH(repo, groupIdS, artifactId, fileName, "repository", "Repository");
+   CREATEFILEPATH(service, groupIdS, artifactId, fileName, "service", "Service");
 
    create_model(model, groupId, artifactId, fileName);
    create_service(service, groupId, artifactId, fileName, lname);
@@ -108,7 +117,7 @@ int main(int argc, char **argv){
       }
       char path[MAX];
       snprintf(path, MAX, "%s\n%s\n", argv[2], argv[3]);
-      create_file("prova.saka", path);
+      create_file(CONF_FILE, path);
    }else {
       if (argc<2){
          printf("no");
