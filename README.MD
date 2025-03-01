@@ -53,12 +53,12 @@ sudo mv <name_of_executable> bin/
 
 ## On mac os
 ```
-sudo cc -Wall -Wextra -std=c99 -O2 -o user/bin/<name_of_executable> main.c
+sudo cc -Wall -Wextra -std=c99 -O2 -o /usr/local/bin/<name_of_executable> main.c
 ```
 Or:
 ```
-cc -Wall -Wextra -std=c99 -O2 -o bin/<name_of_executable> main.c
-sudo mv <name_of_executable> user/bin/
+cc -Wall -Wextra -std=c99 -O2 -o <name_of_executable> main.c
+sudo mv <name_of_executable> /usr/local/bin/
 ```
 
 
