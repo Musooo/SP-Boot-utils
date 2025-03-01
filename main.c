@@ -88,6 +88,64 @@ int get_ids(char groupId[MAX], char artifactId[MAX]){
    return 0;
 }
 
+
+
+int get_idsPom() {
+   FILE *file;
+   char line[MAX], groupId[MAX] = "", artifactId[MAX] = "";
+   
+
+   // Need to find the second groupId and artifactId in the pom.xml file 
+   int foundGroupId = 0;
+   int foundArtifactId = 0;
+
+   file = fopen("pom.xml", "r");
+   if (file == NULL) {
+       perror("Error opening file");
+       return -1;
+   }
+
+   while (fgets(line, sizeof(line), file) != NULL) {
+
+      char *start, *end;
+      if ((start = strstr(line, "<groupId>")) != NULL) {
+         start += strlen("<groupId>");
+         if ((end = strstr(start, "</groupId>")) != NULL) {
+            if (++foundGroupId == 2) {
+               strncpy(groupId, start, end - start);
+               groupId[end - start] = '\0';
+            }
+         }
+      } else if ((start = strstr(line, "<artifactId>")) != NULL) {
+         start += strlen("<artifactId>");
+         if ((end = strstr(start, "</artifactId>")) != NULL) {
+            if (++foundArtifactId == 2) {
+               strncpy(artifactId, start, end - start);
+               artifactId[end - start] = '\0';
+            }
+         }
+      }
+
+      if (foundGroupId >= 2 && foundArtifactId >= 2) {
+         break;
+      }
+    }
+   
+   fclose(file);
+
+   if (foundGroupId < 2 || foundArtifactId < 2) {
+        printf("Error: Could not find the second occurrence of required tags in pom.xml\n");
+        return -1;
+    }
+
+      char path[MAX];
+      snprintf(path, MAX, "%s\n%s\n", groupId, artifactId);
+      printf("Writing to file: %s\n", path);
+      create_file(CONF_FILE, path);
+      return 0;
+}
+
+
 int create_files(char groupId[MAX], char artifactId[MAX], char *fileName){
    char model[MAX*2], repo[MAX*2], service[MAX*2];
 
@@ -165,9 +223,12 @@ int main(int argc, char **argv){
       printf("-s to set up the %s, follow that with <groupId> <artifactId>\n", CONF_FILE);
       printf("example: molten -s org.example prova\n");
       printf("please do not create goofy groupId/artifact do not use special char except in the groupId where you should put a \".\"\n");
+      printf("-a: to read the pom.xml and safe the <groupId> and <artifactId>\n");
       printf("How to create the files\n");
       printf("example: molten <ObkName>\n");
       printf("Remember to put the first letter capital, for now the program doesn't fix it\n");
+   }else if(strcmp(argv[1], "-a") == 0){
+      get_idsPom();
    }else {
       if (argc<2){
          printf("no");
