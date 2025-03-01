@@ -6,10 +6,10 @@
 
 #if defined(_WIN32) || defined(__CYGWIN__)
    #define BASE_PATH "src\\main\\java\\"
-   #define CREATEFILEPATH(buffer, groupId, artifactId, fileName, mod, mod2) (snprintf(buffer, MAX, "%s%s\\%s\\%s\\%s%s.java", BASE_PATH, groupId, artifactId, mod,fileName, mod2))
+   #define CREATEFILEPATH(buffer, groupId, artifactId, fileName, mod, mod2) (snprintf(buffer, MAX*2, "%s%s\\%s\\%s\\%s%s.java", BASE_PATH, groupId, artifactId, mod,fileName, mod2))
 #elif defined(unix) || defined(__unix__) || defined(__unix)
    #define BASE_PATH "src/main/java/"
-   #define CREATEFILEPATH(buffer, groupId, artifactId, fileName, mod, mod2) (snprintf(buffer, MAX, "%s%s/%s/%s/%s%s.java", BASE_PATH, groupId, artifactId, mod,fileName, mod2))
+   #define CREATEFILEPATH(buffer, groupId, artifactId, fileName, mod, mod2) (snprintf(buffer, MAX*2, "%s%s/%s/%s/%s%s.java", BASE_PATH, groupId, artifactId, mod,fileName, mod2))
 #else
     #error Unknown environment!
 #endif
@@ -86,7 +86,7 @@ int get_ids(char groupId[MAX], char artifactId[MAX]){
 }
 
 int create_files(char groupId[MAX], char artifactId[MAX], char *fileName){
-   char model[MAX], repo[MAX], service[MAX];
+   char model[MAX*2], repo[MAX*2], service[MAX*2];
 
    char lname[MAX];
    strcpy(lname, fileName);
@@ -119,6 +119,8 @@ int main(int argc, char **argv){
    // nomeclasse
    if (argc == 1){
       printf("find help\n");
+   }else if (strcmp(argv[1], "-d") == 0){
+      printf("you are getting the d\n");
    }else if (strcmp(argv[1], "-s") == 0){
       if (argc<4){
          printf("not enough argv, you have to put groupId artifactId");
