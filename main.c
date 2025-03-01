@@ -1,5 +1,6 @@
 #include <stdio.h>
 #include <string.h>
+#include <sys/stat.h>
 
 #define MAX 100
 #define CONF_FILE "prova.saka"
@@ -7,9 +8,11 @@
 #if defined(_WIN32) || defined(__CYGWIN__)
    #define BASE_PATH "src\\main\\java\\"
    #define CREATEFILEPATH(buffer, groupId, artifactId, fileName, mod, mod2) (snprintf(buffer, MAX*2, "%s%s\\%s\\%s\\%s%s.java", BASE_PATH, groupId, artifactId, mod,fileName, mod2))
-#elif defined(unix) || defined(__unix__) || defined(__unix)
+   #define DIR_PATH(buffer, groupId, artifactId, dir) (snprintf(buffer, MAX*2, "%s%s\\%s\\%s", BASE_PATH, groupId, artifactId, dir)) 
+#elif defined(unix) || defined(__unix__) || defined(__unix) || defined(__APPLE__)
    #define BASE_PATH "src/main/java/"
    #define CREATEFILEPATH(buffer, groupId, artifactId, fileName, mod, mod2) (snprintf(buffer, MAX*2, "%s%s/%s/%s/%s%s.java", BASE_PATH, groupId, artifactId, mod,fileName, mod2))
+   #define DIR_PATH(buffer, groupId, artifactId, dir) (snprintf(buffer, MAX*2, "%s%s/%s/%s", BASE_PATH, groupId, artifactId, dir))   
 #else
     #error Unknown environment!
 #endif
@@ -93,6 +96,7 @@ int create_files(char groupId[MAX], char artifactId[MAX], char *fileName){
    if (lname[0] >= 'A' && lname[0] <= 'Z') {
       lname[0] += ('a' - 'A');
    }
+
    char groupIdS[MAX];
    strcpy(groupIdS, groupId);
    for(int i = 0; i<MAX; i++){
@@ -101,7 +105,6 @@ int create_files(char groupId[MAX], char artifactId[MAX], char *fileName){
          break;
       }
    }
-
    
    CREATEFILEPATH(model, groupIdS, artifactId, fileName, "model", "");
    CREATEFILEPATH(repo, groupIdS, artifactId, fileName, "repository", "Repository");
@@ -114,13 +117,40 @@ int create_files(char groupId[MAX], char artifactId[MAX], char *fileName){
    return 0;
 }
 
+int create_dir(){
+   char groupId[MAX], artifactId[MAX], dir_path[MAX*2];
+   get_ids(groupId,artifactId);
+
+   for(int i = 0; i<MAX; i++){
+      if (groupId[i]=='.'){
+         groupId[i]='/';
+         break;
+      }
+   }
+
+   DIR_PATH(dir_path, groupId, artifactId, "controller");
+   mkdir(dir_path, S_IRWXU);
+
+   DIR_PATH(dir_path, groupId, artifactId, "model");
+   mkdir(dir_path, S_IRWXU);
+
+   DIR_PATH(dir_path, groupId, artifactId, "repository");
+   mkdir(dir_path, S_IRWXU);
+
+   DIR_PATH(dir_path, groupId, artifactId, "service");
+   mkdir(dir_path, S_IRWXU);
+
+   return 0;
+}
+
 int main(int argc, char **argv){
    // -s groupId artifactId
    // nomeclasse
    if (argc == 1){
       printf("find help\n");
    }else if (strcmp(argv[1], "-d") == 0){
-      printf("you are getting the d\n");
+      printf("creating dirs\n");
+      create_dir();
    }else if (strcmp(argv[1], "-s") == 0){
       if (argc<4){
          printf("not enough argv, you have to put groupId artifactId");
