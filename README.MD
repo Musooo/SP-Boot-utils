@@ -58,7 +58,7 @@ sudo cc -Wall -Wextra -std=c99 -O2 -o /usr/local/bin/<name_of_executable> main.c
 Or:
 ```
 cc -Wall -Wextra -std=c99 -O2 -o <name_of_executable> main.c
-sudo mv <name_of_executable> /usr/local/bin/
+sudo mv <name_of_executable> /usr/local/bin
 ```
 
 
