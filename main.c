@@ -201,43 +201,58 @@ int create_dir(){
    return 0;
 }
 
+int help_text(){
+   printf("help:\n");
+   printf("settup the conf. file\n");
+   printf("-s to set up the %s, follow that with <groupId> <artifactId>\n", CONF_FILE);
+   printf("example: molten -s org.example prova\n");
+   printf("please do not create goofy groupId/artifact do not use special char except in the groupId where you should put a \".\"\n");
+   printf("-a: to read the pom.xml and safe the <groupId> and <artifactId>\n");
+   printf("How to create the files\n");
+   printf("example: molten <ObkName>\n");
+   printf("Remember to put the first letter capital, for now the program doesn't fix it\n");
+   return 0;
+}
+
+
+
 int main(int argc, char **argv){
    // -s groupId artifactId
    // nomeclasse
-   if (argc == 1){
-      printf("find help\n");
-   }else if (strcmp(argv[1], "-d") == 0){
-      printf("creating dirs\n");
-      create_dir();
-   }else if (strcmp(argv[1], "-s") == 0){
-      if (argc<4){
-         printf("not enough argv, you have to put groupId artifactId");
-         return -1;
-      }
-      char path[MAX];
-      snprintf(path, MAX, "%s\n%s\n", argv[2], argv[3]);
-      create_file(CONF_FILE, path);
-   }else if(strcmp(argv[1], "-h") == 0){
-      printf("help:\n");
-      printf("settup the conf. file\n");
-      printf("-s to set up the %s, follow that with <groupId> <artifactId>\n", CONF_FILE);
-      printf("example: molten -s org.example prova\n");
-      printf("please do not create goofy groupId/artifact do not use special char except in the groupId where you should put a \".\"\n");
-      printf("-a: to read the pom.xml and safe the <groupId> and <artifactId>\n");
-      printf("How to create the files\n");
-      printf("example: molten <ObkName>\n");
-      printf("Remember to put the first letter capital, for now the program doesn't fix it\n");
-   }else if(strcmp(argv[1], "-a") == 0){
-      get_idsPom();
-   }else {
-      if (argc<2){
-         printf("no");
-      }
-      char groupId[MAX], artifactId[MAX];
-      get_ids(groupId,artifactId);
-      create_files(groupId, artifactId, argv[1]);
+
+   if (argc < 1){
+      printf("My name is Linus Torvalds and I am your god.\n");
+      return -1;
    }
 
+   int i = 1;
+
+   while (i < argc){
+      if (strcmp(argv[i], "-d") == 0){
+         printf("creating dirs\n");
+         create_dir();
+      }else if (strcmp(argv[i], "-s") == 0){
+         if (i+2>argc){
+            printf("not enough argv, you have to put groupId artifactId");
+            return -1;
+         }
+         char path[MAX];
+         snprintf(path, MAX, "%s\n%s\n", argv[i+1], argv[i+2]);
+         create_file(CONF_FILE, path);
+         i +=2;
+      }else if(strcmp(argv[i], "-h") == 0){
+         help_text();
+      }else if(strcmp(argv[i], "-a") == 0){
+         get_idsPom();
+      }else {
+         char groupId[MAX], artifactId[MAX];
+         get_ids(groupId,artifactId);
+         create_files(groupId, artifactId, argv[i]);
+      }
+
+      i++;
+   }
+   
 
    return 0;
 }
