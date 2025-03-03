@@ -206,6 +206,7 @@ int help_text(){
    printf("settup the conf. file\n");
    printf("-s to set up the %s, follow that with <groupId> <artifactId>\n", CONF_FILE);
    printf("example: molten -s org.example prova\n");
+   printf("-d to create controller, service, model, repository dir");
    printf("please do not create goofy groupId/artifact do not use special char except in the groupId where you should put a \".\"\n");
    printf("-a: to read the pom.xml and safe the <groupId> and <artifactId>\n");
    printf("How to create the files\n");
