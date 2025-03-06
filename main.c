@@ -2,19 +2,19 @@
 #include <string.h>
 #include <sys/stat.h>
 
-#define MAX 100
+#define MAX 65
 #define CONF_FILE "prova.saka"
 
 #if defined(_WIN32) || defined(__CYGWIN__)
    #include <direct.h>
    #define mkdir _mkdir
    #define BASE_PATH "src\\main\\java\\"
-   #define CREATEFILEPATH(buffer, groupId, artifactId, fileName, mod, mod2) (snprintf(buffer, MAX*2, "%s%s\\%s\\%s\\%s%s.java", BASE_PATH, groupId, artifactId, mod,fileName, mod2))
-   #define DIR_PATH(buffer, groupId, artifactId, dir) (snprintf(buffer, MAX*2, "%s%s\\%s\\%s", BASE_PATH, groupId, artifactId, dir)) 
+   #define CREATEFILEPATH(buffer, groupId, artifactId, fileName, mod, mod2) (snprintf(buffer, MAX*4, "%s%s\\%s\\%s\\%s%s.java", BASE_PATH, groupId, artifactId, mod,fileName, mod2))
+   #define DIR_PATH(buffer, groupId, artifactId, dir) (snprintf(buffer, MAX*4, "%s%s\\%s\\%s", BASE_PATH, groupId, artifactId, dir)) 
 #elif defined(unix) || defined(__unix__) || defined(__unix) || defined(__APPLE__)
    #define BASE_PATH "src/main/java/"
-   #define CREATEFILEPATH(buffer, groupId, artifactId, fileName, mod, mod2) (snprintf(buffer, MAX*2, "%s%s/%s/%s/%s%s.java", BASE_PATH, groupId, artifactId, mod,fileName, mod2))
-   #define DIR_PATH(buffer, groupId, artifactId, dir) (snprintf(buffer, MAX*2, "%s%s/%s/%s", BASE_PATH, groupId, artifactId, dir))   
+   #define CREATEFILEPATH(buffer, groupId, artifactId, fileName, mod, mod2) (snprintf(buffer, MAX*4, "%s%s/%s/%s/%s%s.java", BASE_PATH, groupId, artifactId, mod,fileName, mod2))
+   #define DIR_PATH(buffer, groupId, artifactId, dir) (snprintf(buffer, MAX*4, "%s%s/%s/%s", BASE_PATH, groupId, artifactId, dir))   
 #else
     #error Unknown environment!
 #endif
@@ -149,7 +149,7 @@ int get_idsPom() {
 
 
 int create_files(char groupId[MAX], char artifactId[MAX], char *fileName){
-   char model[MAX*2], repo[MAX*2], service[MAX*2];
+   char model[MAX*4], repo[MAX*4], service[MAX*4];
 
    char lname[MAX];
    strcpy(lname, fileName);
@@ -178,7 +178,7 @@ int create_files(char groupId[MAX], char artifactId[MAX], char *fileName){
 }
 
 int create_dir(){
-   char groupId[MAX], artifactId[MAX], dir_path[MAX*2];
+   char groupId[MAX], artifactId[MAX], dir_path[MAX*4];
    get_ids(groupId,artifactId);
 
    for(int i = 0; i<MAX; i++){
@@ -189,7 +189,7 @@ int create_dir(){
    }
 
    DIR_PATH(dir_path, groupId, artifactId, "controller");
-   
+
    #ifdef _WIN32 
       mkdir(dir_path);
 
@@ -226,7 +226,7 @@ int help_text(){
    printf("please do not create goofy groupId/artifact do not use special char except in the groupId where you should put a \".\"\n");
    printf("-a: to read the pom.xml and safe the <groupId> and <artifactId>\n");
    printf("How to create the files\n");
-   printf("example: molten <ObkName>\n");
+   printf("example: molten <ObjName>\n");
    printf("Remember to put the first letter capital, for now the program doesn't fix it\n");
    return 0;
 }
