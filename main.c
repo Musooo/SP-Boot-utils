@@ -6,6 +6,8 @@
 #define CONF_FILE "prova.saka"
 
 #if defined(_WIN32) || defined(__CYGWIN__)
+   #include <direct.h>
+   #define mkdir _mkdir
    #define BASE_PATH "src\\main\\java\\"
    #define CREATEFILEPATH(buffer, groupId, artifactId, fileName, mod, mod2) (snprintf(buffer, MAX*2, "%s%s\\%s\\%s\\%s%s.java", BASE_PATH, groupId, artifactId, mod,fileName, mod2))
    #define DIR_PATH(buffer, groupId, artifactId, dir) (snprintf(buffer, MAX*2, "%s%s\\%s\\%s", BASE_PATH, groupId, artifactId, dir)) 
@@ -187,16 +189,30 @@ int create_dir(){
    }
 
    DIR_PATH(dir_path, groupId, artifactId, "controller");
-   mkdir(dir_path, S_IRWXU);
+   
+   #ifdef _WIN32 
+      mkdir(dir_path);
 
-   DIR_PATH(dir_path, groupId, artifactId, "model");
-   mkdir(dir_path, S_IRWXU);
+      DIR_PATH(dir_path, groupId, artifactId, "model");
+      mkdir(dir_path);
 
-   DIR_PATH(dir_path, groupId, artifactId, "repository");
-   mkdir(dir_path, S_IRWXU);
+      DIR_PATH(dir_path, groupId, artifactId, "repository");
+      mkdir(dir_path);
 
-   DIR_PATH(dir_path, groupId, artifactId, "service");
-   mkdir(dir_path, S_IRWXU);
+      DIR_PATH(dir_path, groupId, artifactId, "service");
+      mkdir(dir_path);
+   #else
+      mkdir(dir_path, S_IRWXU);
+
+      DIR_PATH(dir_path, groupId, artifactId, "model");
+      mkdir(dir_path, S_IRWXU);
+
+      DIR_PATH(dir_path, groupId, artifactId, "repository");
+      mkdir(dir_path, S_IRWXU);
+
+      DIR_PATH(dir_path, groupId, artifactId, "service");
+      mkdir(dir_path, S_IRWXU);
+   #endif
 
    return 0;
 }
