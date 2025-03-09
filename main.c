@@ -91,7 +91,6 @@ int get_ids(char groupId[MAX], char artifactId[MAX]){
 }
 
 
-
 int get_idsPom() {
    FILE *file;
    char line[MAX], groupId[MAX] = "", artifactId[MAX] = "";
@@ -161,8 +160,12 @@ int create_files(char groupId[MAX], char artifactId[MAX], char *fileName){
    strcpy(groupIdS, groupId);
    for(int i = 0; i<MAX; i++){
       if (groupIdS[i]=='.'){
-         groupIdS[i]='/';
-         break;
+		#ifdef _WIN32
+			groupIdS[i]='\\';
+		#else
+			groupIdS[i] = '/';
+      #endif
+		break;
       }
    }
    
@@ -269,7 +272,7 @@ int main(int argc, char **argv){
 
       i++;
    }
-   
+
 
    return 0;
 }
